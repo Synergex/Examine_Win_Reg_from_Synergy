@@ -1,0 +1,79 @@
+;****************************************************************************
+;
+; Title:		registry.def
+;
+; Author:		Steve Ives (Synergex Professional Services Group)
+;
+; Date:			9th June 1999
+;
+; Description:	Definition file for registry access routines
+;
+; Platforms:	32-bit Microsoft Windows platforms only.
+;
+;****************************************************************************
+;
+; This code is supplied as seen and without warranty or support, and is used
+; at your own risk. Neither the author or Synergex accept any responsability
+; for any loss or damage which may result from the use of this code.
+;
+;****************************************************************************
+;
+;Externally visible
+
+.ifndef REGISTRY_INTERNAL
+	external function
+	RegCreateKey				,^VAL
+	RegDeleteKey				,^VAL
+	RegDeleteValue				,^VAL
+	RegGetBinary				,^VAL
+	RegGetDword					,^VAL
+	RegGetString				,^VAL
+	RegSetBinary				,^VAL
+	RegSetDword					,^VAL
+	RegSetString				,^VAL
+	RegStartSession				,^VAL
+	RegEndSession				,^VAL
+.endc
+
+;Internally visible
+
+.ifdef REGISTRY_INTERNAL
+	.define REG_SZ				1   ;Unicode null terminated string
+	.define REG_BINARY			3   ;Free form binary
+	.define REG_DWORD			4   ;32-bit number
+	.define REG_SUCCESS         0   ;Successful return status
+	.define REG_ERR_CREKEY		1	;Failed to create key
+	.define REG_ERR_OPNKEY		2	;Failed to open key
+	.define REG_ERR_CLSKEY		3	;Failed to close key
+	.define REG_ERR_DELKEY		4	;Failed to delete key
+	.define REG_ERR_GETVAL		5	;Failed to get value
+	.define REG_ERR_SETVAL		6	;Failed to set value
+	.define REG_ERR_DELVAL		7	;Failed to delete value
+	.define REG_ERR_VALTYP		8	;Incorrect key type
+	.define REG_ERR_FLUSH		9	;Failed to flush to disk
+	.define REG_ERR_DLLOPN		10	;Failed to open DLL
+.endc
+
+;Globally Visible
+
+structure REG$BINARY
+	reg$byte					,i1
+
+.define BINSIZE(x)				(^size(REG$BINARY) * x)
+.define BINDATA(x,y)			^m(REG$BINARY[y].reg$byte,x)
+
+.define HKEY_CLASSES_ROOT		%x(80000000)
+.define HKEY_CURRENT_USER		%x(80000001)
+.define HKEY_LOCAL_MACHINE		%x(80000002)
+.define HKEY_USERS				%x(80000003)
+.define HKEY_CURRENT_CONFIG		%x(80000005)
+.define HKEY_DYN_DATA			%x(80000006)
+
+.define REG_FLUSH			1	;Flush to disk after operation
+.define REG_FREEMEM			2	;Free synamic memory after RegSetBinary
+
+
+.ifdef REGISTRY_INTERNAL
+	.undefine REGISTRY_INTERNAL
+.endc
+

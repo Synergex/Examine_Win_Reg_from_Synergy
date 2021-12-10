@@ -1,0 +1,110 @@
+<html>
+
+<head>
+<title>%RegDeleteKey</title>
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#0000FF" alink="#FF0000">
+
+<h3 align="right"><font face="Arial"><a href="default.htm">Home</a></font></h3>
+
+<h1><font face="Arial">%RegDeleteKey</font></h1>
+
+<table border="0" width="100%" cellspacing="6">
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Description</font></h3>
+    </td>
+    <td colspan="2" valign="top"><font face="Arial">Delete a key from the Windows Registry</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><font face="Arial"><h3>Interface</h3>
+    </font></td>
+    <td valign="top" colspan="2"><em><font face="Arial"><pre></font><strong>status</em> = %RegDeleteKey(<em>reghdl</em> ,<em>hive</em> ,<em>key</em>)</strong><em></pre>
+    </em><pre><strong> </strong>   or</pre>
+    <pre><strong>xcall RegDeleteKey(<em>reghdl</em> ,<em>hive</em> ,<em>key</em>)</strong></pre>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Arguments</font></h3>
+    </td>
+    <td valign="top"><strong><font face="Arial"><em>reghdl</em></font></strong></td>
+    <td valign="top"><font face="Arial">A registry session handle returned by <a
+    href="RegStartSession.htm">RegStartSession</a>. (i4)</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"></td>
+    <td valign="top"><strong><font face="Arial"><em>hive</em></font></strong></td>
+    <td valign="top"><font face="Arial">The Registry hive in which the key that you wish to
+    create resides.&nbsp; This can be one of the following (as defined in PSG:registry.def:</font><b><pre></b>HKEY_CLASSES_ROOT
+HKEY_CURRENT_CONFIG
+HKEY_CURRENT_USER
+HKEY_LOCAL_MACHINE
+HKEY_USERS
+HKEY_PERFORMANCE_DATA (Windows NT only)
+HKEY_DYN_DATA         (Windows 95 and Windows 98 only)</pre>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"></td>
+    <td valign="top"><strong><font face="Arial"><em>key</em></font></strong></td>
+    <td valign="top"><font face="Arial">The registry key (directory) to be deleted. (a)</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Return Value</font></h3>
+    </td>
+    <td colspan="2" valign="top"><font face="Arial">If successful the routine returns
+    REG_SUCCESS (0).&nbsp; Otherwise one of the REG_ERR_ error states is returned (as defined
+    in PSG:registry.def).</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Remarks</font></h3>
+    </td>
+    <td colspan="2" valign="top"><font face="Arial">This routine deletes a key (directory) in
+    the Windows Registry. Any values contained within the key will also be deleted. On Windows
+    95 and Windows 98 this routine will recursively delete any sub-keys of the specified key
+    (along with all of their values) in a similar way to the MS-DOS DELTREE command, which
+    deletes an entire directory structure. On Windows NT the key to be deleted MUST NOT
+    contain sub-keys, or the routine will fail.</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Related Routines</font></h3>
+    </td>
+    <td colspan="2" valign="top"><a href="RegCreateKey.htm"><font face="Arial">RegCreateKey</font></a></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" colspan="3"><hr noshade>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Example</font></h3>
+    </td>
+    <td colspan="2" valign="top"></td>
+  </tr>
+</table>
+</body>
+</html>

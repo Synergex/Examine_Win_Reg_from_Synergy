@@ -1,0 +1,152 @@
+<html>
+
+<head>
+<title>%RegSetBinary</title>
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#0000FF" alink="#FF0000">
+
+<h3 align="right"><font face="Arial"><a href="default.htm">Home</a></font></h3>
+
+<h1><font face="Arial">%RegSetBinary</font></h1>
+
+<table border="0" width="100%" cellspacing="6">
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Description</font></h3>
+    </td>
+    <td colspan="2" valign="top"><font face="Arial">Set a binary (REG_BINARY) value in the
+    Windows Registry</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><font face="Arial"><h3>Interface</h3>
+    </font></td>
+    <td valign="top" colspan="2"><em><font face="Arial"><pre></font><strong>status</em> = %RegSetBinary(<em>reghdl</em> ,<em>hive</em> ,<em>key</em> ,<em>value</em> ,<em>data</em> ,<em>size</em> [,<em>flush</em>] [,<em>freemem</em>])</strong><font
+face="Arial"><em></pre>
+    </em></font><pre><strong>    or</strong></pre>
+    <pre><strong>xcall RegSetBinary(<em>reghdl</em> ,<em>hive</em> ,<em>key</em> ,<em>value</em> ,<em>data</em> ,<em>size</em> [,<em>flush</em>] [,<em>freemem</em>])</strong></pre>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Arguments</font></h3>
+    </td>
+    <td valign="top"><strong><font face="Arial"><em>reghdl</em></font></strong></td>
+    <td valign="top"><font face="Arial">A registry session handle returned by <a
+    href="RegStartSession.htm">RegStartSession</a>. (i4)</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"></td>
+    <td valign="top"><strong><font face="Arial"><em>hive</em></font></strong></td>
+    <td valign="top"><font face="Arial">The Registry hive in which the key that you wish to
+    create resides.&nbsp; This can be one of the following (as defined in PSG:registry.def:</font><b><pre></b>HKEY_CLASSES_ROOT
+HKEY_CURRENT_CONFIG
+HKEY_CURRENT_USER
+HKEY_LOCAL_MACHINE
+HKEY_USERS
+HKEY_PERFORMANCE_DATA (Windows NT only)
+HKEY_DYN_DATA         (Windows 95 and Windows 98 only)</pre>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"></td>
+    <td valign="top"><strong><font face="Arial"><em>key</em></font></strong></td>
+    <td valign="top"><font face="Arial">The registry key (directory) in which the value will
+    be created or updated. (a)</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"></td>
+    <td valign="top"><strong><font face="Arial"><em>value</em></font></strong></td>
+    <td valign="top"><font face="Arial">The name of the value to be created or updated in the
+    specified key in the specified hive. (a)</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"></td>
+    <td valign="top"><strong><font face="Arial"><em>data</em></font></strong></td>
+    <td valign="top"><font face="Arial">The handle of a dynamic memory section into which you
+    have placed the binary data to be stored in the specified Registry key. (i4)</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"></td>
+    <td valign="top"><strong><font face="Arial"><em>size</em></font></strong></td>
+    <td valign="top"><font face="Arial">The number of bytes of binary data that you have
+    placed in the dynamic memory section. (n)</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"></td>
+    <td valign="top"><strong><font face="Arial"><em>flush</em></font></strong></td>
+    <td valign="top"><font face="Arial">An optional flag specifying that the new or updated
+    Registry value should be flushed to disk immediately.&nbsp; By default, the registry is
+    flushed to disk only periodically (as determined by the operating system) and at system
+    shutdown.&nbsp; To cause the new or updated value to be flushed to disk immediately, pass <strong>REG_FLUSH</strong>.
+    (n)</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"></td>
+    <td valign="top"><strong><font face="Arial"><em>freemem</em></font></strong></td>
+    <td valign="top"><font face="Arial">An optional flag which causes the dynamic memory
+    section to be deleted when once the data has been saved in the named Registry value.
+    &nbsp; To cause the dynamic memory to be deleted, pass <strong>REG_FREEMEM</strong>.&nbsp;
+    If you do not pass this argument then the dynamic memory will still be allocated on return
+    to your routine, and you must deallocate it in your program. (n)</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Return Value</font></h3>
+    </td>
+    <td colspan="2" valign="top"><font face="Arial">If successful the routine returns
+    REG_SUCCESS (0).&nbsp; Otherwise one of the REG_ERR_ error states is returned (as defined
+    in PSG:registry.def).</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Remarks</font></h3>
+    </td>
+    <td colspan="2" valign="top"><font face="Arial">This routine sets a REG_BINARY value in
+    the specified key in the Registry. If the value is not found, it will be created. If the
+    key (or parent keys) are not found, they will be created. In other words, this routine can
+    create a new value, several levels deep in a totally new heirarchy in the Registry.</font><p><font
+    face="Arial">Binary data is passed to this routine in a dynamic memory section, with the
+    handle and size of the section being provided to the routine.&nbsp; If the dynamic memory
+    section was created solely for the purpose of storing data into the Registry, then the
+    rourine can deallocate the dynamic memory section for you if you pass the REG_FREEMEM
+    argument.</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Related Routines</font></h3>
+    </td>
+    <td colspan="2" valign="top"><a href="RegGetBinary.htm"><font face="Arial">RegGetBinary</font></a></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" colspan="3"><hr noshade>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Example</font></h3>
+    </td>
+    <td colspan="2" valign="top"></td>
+  </tr>
+</table>
+</body>
+</html>

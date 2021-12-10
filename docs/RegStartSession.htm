@@ -1,0 +1,108 @@
+<html>
+
+<head>
+<title>%RegStartSession</title>
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#0000FF" alink="#FF0000">
+
+<h3 align="right"><font face="Arial"><a href="default.htm">Home</a></font></h3>
+
+<h1><font face="Arial">%RegStartSession</font></h1>
+
+<table border="0" width="100%" cellspacing="6">
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Description</font></h3>
+    </td>
+    <td colspan="2" valign="top"><font face="Arial">Start a Windows Registry session</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><font face="Arial"><h3>Interface</h3>
+    </font></td>
+    <td valign="top" colspan="2"><em><font face="Arial"><pre></font><strong>status</em> = %RegStartSession(<em>reghdl</em>)</strong><font
+face="Arial"><em></pre>
+    </em></font><pre>    or</pre>
+    <pre><strong>xcall RegStartSession(<em>reghdl</em>)</strong></pre>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Arguments</font></h3>
+    </td>
+    <td valign="top"><strong><font face="Arial"><em>reghdl</em></font></strong></td>
+    <td valign="top"><font face="Arial">Returned with the handle of the open DLL (i4)</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Return Value</font></h3>
+    </td>
+    <td colspan="2" valign="top"><font face="Arial">If the DLL is successfully opened, the
+    routine returns REG_SUCCESS (0).&nbsp; Otherwise REG_ERR_DLLOPN is returned.</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Remarks</font></h3>
+    </td>
+    <td colspan="2" valign="top"><font face="Arial">All of the WIN32 API routines which
+    communicate with the Windows Registry are found in ADVAPI32.DLL in the Windows System
+    directory. This routine opens the DLL ready for use, returning the handle of the DLL for
+    use in subsequent calls.</font><p><font face="Arial">RegStartSession must be the first
+    routine called in the Registry session.&nbsp; At the end of the session, the DLL should be
+    closed by calling <a href="RegEndSession.htm">RegEndSession</a>.</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Related Routines</font></h3>
+    </td>
+    <td colspan="2" valign="top"><font face="Arial"><a href="RegEndSession.htm">RegEndSession</a></font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" colspan="3"><hr noshade>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Example</font></h3>
+    </td>
+    <td colspan="2" valign="top"><pre>.include &quot;PSG:psg.def&quot;</pre>
+    <pre>.align
+record
+    regsess     ,i4</pre>
+    <pre>.proc
+
+    if (%RegStartSession(regsess) .eq. REG_SUCCESS)
+    begin
+
+        ;Registry session is open
+
+    end
+
+    .
+    .
+    .
+</pre>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,63 @@
+;****************************************************************************
+;
+; Title:        RegDeleteKey.dbl
+;
+; Author:       Steve Ives (Synergex Professional Services Group)
+;
+; Date:         9th June 1999
+;
+; Description:  This routine deletes a key in the Registry.  Any values
+;               contained within the key will also be deleted.  On Windows
+;               95 and Windows 98, this routine will recursively delete any
+;               sub-keys of the specified key (along with all of their values)
+;               in a similar way to the MS-DOS deltree utility which deletes
+;               an entire directory structure.  On Windows NT, the key to be
+;               deleted MUST NOT contain sub-keys, or the routine will fail.
+;
+; Platforms:    32-bit Microsoft Windows platforms only.
+;
+; Warning:      The operation and reliability of a Windows system depends on
+;               the integrity of the Registry.  Inappropriate use of this
+;               routine could result in serious damage to the registry.
+;               Please exercise extreme caution when using this routine.
+;
+;****************************************************************************
+;
+; This code is supplied as seen and without warranty or support, and is used
+; at your own risk. Neither the author or Synergex accept any responsability
+; for any loss or damage which may result from the use of this code.
+;
+;****************************************************************************
+
+.function RegDeleteKey, ^VAL
+
+;Argument list
+
+    a_reghdl    ,n      ;Registry handle    (Returned by RegStartSession)
+    a_hive      ,n      ;Registry hive      (e.g. HKEY_LOCAL_MACHINE)
+    a_key       ,a      ;Path below hive    (e.g. "Software\SomeCompany\Someproduct")
+
+;End of argument list
+
+.define REGISTRY_INTERNAL
+.include "INC:registry.def"
+
+.align
+    stack record
+        status      ,i4     ;Return status
+        key         ,a255   ;a_key in a null-terminated string
+
+.proc
+
+    status = REG_SUCCESS
+
+    xcall fill(%char(0),key)
+    key(1:%trim(a_key)) = a_key
+
+    if (%dll_call(a_reghdl,DLL_TYPE_WINAPI,"RegDeleteKeyA",a_hive,^addr(key)))
+        status = REG_ERR_DELKEY
+
+    freturn status
+
+.end
+

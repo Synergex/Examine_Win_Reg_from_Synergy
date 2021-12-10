@@ -1,0 +1,130 @@
+;****************************************************************************
+;
+; Title:        test_registry.dbl
+;
+; Author:       Steve Ives (Synergex Professional Services Group)
+;
+; Date:         9th June 1999
+;
+; Description:  Test program for registry routines
+;
+; Platforms:    32-bit Microsoft Windows platforms only.
+;
+; Warning:      The operation and reliability of a Windows system depends on
+;               the integrity of the Registry.  Inappropriate use of this
+;               routine could result in serious damage to the registry.
+;               Please exercise extreme caution when using this routine.
+;
+;****************************************************************************
+;
+; This code is supplied as seen and without warranty or support, and is used
+; at your own risk. Neither the author or Synergex accept any responsability
+; for any loss or damage which may result from the use of this code.
+;
+;****************************************************************************
+
+.main test_registry
+external function
+    mainprog    ,i
+record
+    stopStatus  ,i4
+proc
+.ifdef DBLv9
+    try
+        stopStatus = %mainprog()
+    catch (excp ,@Exception)
+    begin
+        data ttCh ,i4, %syn_freechn()
+        open(ttCh, O, 'TT:')
+        writes(ttCh, excp.Message)
+        writes(ttCh, excp.StackTrace)
+        close ttCh
+.ifdef DBLNET
+        StopMessage()
+.endc ;DBLNET
+        stopStatus = D_EXIT_FAILURE
+    end
+    endtry
+.else ;DBLv9
+    stopStatus = %mainprog()
+.endc ;DBLv9
+    xcall flags(7000000, 1)
+    stop stopStatus
+end
+
+;;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+function mainprog ,i
+
+.include "WND:tools.def"
+.include "INC:registry.def"
+
+.align
+    record
+        reg         ,i4     ;Registry handle
+        val         ,a255   ;A string value
+
+proc
+
+    xcall u_start
+
+    ;Open a registry session
+
+    if (%RegStartSession(reg)) then
+        xcall u_message("Failed to start registry session")
+    else
+    begin
+
+        ;A "key" is like a "directory".  Create a key called "XYZ Software"
+
+        if %RegCreateKey(reg,HKEY_LOCAL_MACHINE,"SOFTWARE\XYZ Software",REG_FLUSH)
+        then
+            xcall u_message("Failed to create key XYZ Software")
+        else
+            xcall u_message("Created key XYZ Software")
+
+        ;Keys contain "values", which are essentially a name/value pair.  There are
+        ;three types of values, String values, dword (numeric) values, and binary values.
+        ;Here we'll create a String value called "VERSION" and set it to "3.2"
+
+        if %RegSetString(reg,HKEY_LOCAL_MACHINE,"SOFTWARE\XYZ Software","VERSION","3.2")
+        then
+            xcall u_message("Failed to set value VERSION=3.2")
+        else
+            xcall u_message("Set value VERSION=3.2")
+
+        ;Now we'll read the value back again.
+
+        if %RegGetString(reg,HKEY_LOCAL_MACHINE,"SOFTWARE\XYZ Software\","VERSION",val)
+        then
+            xcall u_message("Failed to read VERSION")
+        else
+            xcall u_message("Read version as " + %atrim(val))
+
+        ;Now we'll delete the value.
+
+        if %RegDeleteValue(reg,HKEY_LOCAL_MACHINE,"SOFTWARE\XYZ Software","VERSION")
+        then
+            xcall u_message("Failed to delete value VERSION")
+        else
+            xcall u_message("Deleted value VERSION")
+
+        ;And delete the key
+
+        if %RegDeleteKey(reg,HKEY_LOCAL_MACHINE,"SOFTWARE\XYZ Software")
+        then
+            xcall u_message("Failed to delete key XYZ Software")
+        else
+            xcall u_message("Deleted key XYZ Software")
+
+        ;And finally, end the registry session
+
+        xcall RegEndSession(reg)
+
+    end
+
+    xcall u_finish
+
+    freturn D_EXIT_SUCCESS
+
+end

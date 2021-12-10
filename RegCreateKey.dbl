@@ -1,0 +1,75 @@
+;****************************************************************************
+;
+; Title:        RegCreateKey.dbl
+;
+; Author:       Steve Ives (Synergex Professional Services Group)
+;
+; Date:         9th June 1999
+;
+; Description:  This routine creates a new key in the registry.  The key
+;               specified in a_key CAN contain several "new levels" of keys,
+;               and all new parent keys will also be created.
+;
+; Platforms:    32-bit Microsoft Windows platforms only.
+;
+; Warning:      The operation and reliability of a Windows system depends on
+;               the integrity of the Registry.  Inappropriate use of this
+;               routine could result in serious damage to the registry.
+;               Please exercise extreme caution when using this routine.
+;
+;****************************************************************************
+;
+; This code is supplied as seen and without warranty or support, and is used
+; at your own risk. Neither the author or Synergex accept any responsability
+; for any loss or damage which may result from the use of this code.
+;
+;****************************************************************************
+
+.function RegCreateKey, ^VAL
+
+;Argument list
+
+    a_reghdl    ,n      ;Registry handle    (Returned by RegStartSession)
+    a_hive      ,n      ;Registry hive      (e.g. HKEY_LOCAL_MACHINE)
+    a_key       ,a      ;Path below hive    (e.g. "Software\SomeCompany\SomeProduct")
+    a_flush     ,n      ;(Optional) flush   (flush to disk after create)
+
+;End of argument list
+
+.define REGISTRY_INTERNAL
+.include "INC:registry.def"
+
+.align
+    stack record
+        status      ,i4     ;Return status
+        kh          ,i4     ;Handle to open key
+        key         ,a255   ;a_key in a null-terminated string
+
+.proc
+
+    status = REG_SUCCESS
+
+    ;-----
+    ;Create requested key
+
+    xcall fill(%char(0),key)
+    key(1:%trim(a_key)) = a_key
+
+    if (%dll_call(a_reghdl,DLL_TYPE_WINAPI,"RegCreateKeyA",a_hive,^addr(key),^addr(kh))) then
+        status = REG_ERR_CREKEY
+    else
+    begin
+        ;Flush to disk
+        if (^passed(a_flush).and.(a_flush.eq.REG_FLUSH))
+            if (%dll_call(a_reghdl,DLL_TYPE_WINAPI,"RegFlushKey",kh))
+                status = REG_ERR_FLUSH
+
+        ;Close new key
+        if (%dll_call(a_reghdl,DLL_TYPE_WINAPI,"RegCloseKey",kh))
+            status = REG_ERR_CLSKEY
+    end
+
+    freturn status
+
+.end
+

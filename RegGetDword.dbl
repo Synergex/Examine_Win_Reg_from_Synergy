@@ -1,0 +1,100 @@
+;****************************************************************************
+;
+; Title:        RegGetDword.dbl
+;
+; Author:       Steve Ives (Synergex Professional Services Group)
+;
+; Date:         9th June 1999
+;
+; Description:  This routine retrieves a REG_DWORD (4-byte integer, i4) value
+;               from the specified key in the Registry.  If the specified key
+;               or value is not found then a failure status is returned,
+;               otherwise the data from the registry value is returned.
+;
+; Platforms:    32-bit Microsoft Windows platforms only.
+;
+; Warning:      The operation and reliability of a Windows system depends on
+;               the integrity of the Registry.  Inappropriate use of this
+;               routine could result in serious damage to the registry.
+;               Please exercise extreme caution when using this routine.
+;
+;****************************************************************************
+;
+; This code is supplied as seen and without warranty or support, and is used
+; at your own risk. Neither the author or Synergex accept any responsability
+; for any loss or damage which may result from the use of this code.
+;
+;****************************************************************************
+
+.function RegGetDword, ^VAL
+
+;Argument list
+
+    a_reghdl    ,n      ;Registry handle    (Returned by RegStartSession)
+    a_hive      ,n      ;Registry hive      (e.g. HKEY_LOCAL_MACHINE)
+    a_key       ,a      ;Path below hive    (e.g. "Software\Somecompany\Someproduct")
+    a_value     ,a      ;Value name         (e.g. "AllowPosting")
+    a_data      ,n      ;Value data         (returned)
+
+;End of argument list
+
+.define REGISTRY_INTERNAL
+.include "INC:registry.def"
+
+.align
+    stack record
+        status      ,i4     ;Return status
+        kh          ,i4     ;Handle to currently open key
+        type        ,i4     ;Type of value found in registry
+        size        ,i4     ;Size of value found in registry
+        pos         ,i4     ;Position of first null in return value
+        null        ,i4     ;A null character
+        data        ,i4     ;Return buffer (value data from registry)
+        key         ,a255   ;a_key in a null-terminated string)
+        value       ,a255   ;a_value in a null-terminated string)
+
+.proc
+
+    status = REG_SUCCESS
+    clear a_data
+
+    xcall fill(%char(0),key)
+    key(1:%trim(a_key)) = a_key
+
+    ;Open requested key
+    if (%dll_call(a_reghdl,DLL_TYPE_WINAPI,"RegOpenKeyA",a_hive,^addr(key),^addr(kh))) then
+        status = REG_ERR_OPNKEY
+    else
+    begin
+
+        xcall fill(%char(0),value)
+        value(1:%trim(a_value)) = a_value
+
+        size=4
+
+        ;Get requested value
+        if (%dll_call(a_reghdl,DLL_TYPE_WINAPI,"RegQueryValueExA",kh,^addr(value),null,^addr(type),^addr(data),^addr(size))) then
+            status = REG_ERR_GETVAL
+        else
+        begin
+
+            case type of
+            begincase
+            REG_DWORD:
+                a_data = data       ;Return data
+            REG_SZ:
+                status = REG_ERR_VALTYP
+            REG_BINARY:
+                status = REG_ERR_VALTYP
+            endcase
+
+        end
+
+        if (%dll_call(a_reghdl,DLL_TYPE_WINAPI,"RegCloseKey",kh))
+            status = REG_ERR_CLSKEY
+    end
+
+    freturn status
+
+.end
+

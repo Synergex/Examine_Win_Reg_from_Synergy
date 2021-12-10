@@ -1,0 +1,68 @@
+;****************************************************************************
+;
+; Title:        RegStartSession.dbl
+;
+; Author:       Steve Ives (Synergex Professional Services Group)
+;
+; Date:         9th June 1999
+;
+; Description:  All of the WIN32 API routines which communicate with the
+;               Windows Registry are found in ADVAPI32.DLL in the Windows
+;               System directory. This routine opens the DLL ready for use,
+;               returning the handle of the DLL for use in subsequent calls.
+;
+; Platforms:    32-bit Microsoft Windows platforms only.
+;
+; Warning:      The operation and reliability of a Windows system depends on
+;               the integrity of the Registry.  Inappropriate use of this
+;               routine could result in serious damage to the registry.
+;               Please exercise extreme caution when using this routine.
+;
+;****************************************************************************
+;
+; This code is supplied as seen and without warranty or support, and is used
+; at your own risk. Neither the author or Synergex accept any responsability
+; for any loss or damage which may result from the use of this code.
+;
+;****************************************************************************
+
+.function RegStartSession, ^VAL
+
+;Argument list
+
+    a_reghdl    ,n  ;Registry (DLL) handle
+
+;End of argument list
+
+.define REGISTRY_INTERNAL
+.include "INC:registry.def"
+
+.align
+    stack record
+        status      ,i4     ;Return status
+
+.proc
+
+    status = REG_ERR_DLLOPN
+
+.ifdef D_GUI
+
+    onerror error
+
+    a_reghdl = %dll_open("advapi32.dll")
+
+    status = REG_SUCCESS
+
+    if (%FALSE)
+    begin
+Error,  clear a_reghdl
+    end
+
+    offerror
+
+.endc
+
+    freturn status
+
+.end
+

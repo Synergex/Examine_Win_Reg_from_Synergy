@@ -1,0 +1,100 @@
+<html>
+
+<head>
+<title>%RegEndSession</title>
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#0000FF" alink="#FF0000">
+
+<h3 align="right"><font face="Arial"><a href="default.htm">Home</a></font></h3>
+
+<h1><font face="Arial">%RegEndSession</font></h1>
+
+<table border="0" width="100%" cellspacing="6">
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Description</font></h3>
+    </td>
+    <td colspan="2" valign="top"><font face="Arial">End a Windows Registry session</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><font face="Arial"><h3>Interface</h3>
+    </font></td>
+    <td valign="top" colspan="2"><font face="Arial"><pre></font><strong><em>status</em> = %RegEndSession(<em>reghdl</em>)</strong></pre>
+    <pre><strong>    or</strong></pre>
+    <pre><strong>xcall RegEndSession(<em>reghdl</em>)</strong></pre>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Arguments</font></h3>
+    </td>
+    <td valign="top"><strong><font face="Arial"><em>reghdl</em></font></strong></td>
+    <td valign="top"><font face="Arial">The handle of the open DLL which was obtained from <a
+    href="RegStartSession.htm">RegStartSession</a>. (i4)</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Return Value</font></h3>
+    </td>
+    <td colspan="2" valign="top"><font face="Arial">This routine always returns REG_SUCCESS.</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Remarks</font></h3>
+    </td>
+    <td colspan="2" valign="top"><font face="Arial">This routine ends a Registry session by
+    closing the DLL which was opened in the <a href="RegStartSession.htm">RegStartSession</a>
+    routine. It should be the last routine called in the Registry session.</font><p><font
+    face="Arial">RegEndSession must be the last routine called in the Registry session.</font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><hr noshade>
+    </td>
+    <td valign="top" colspan="2"></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Related Routines</font></h3>
+    </td>
+    <td colspan="2" valign="top"><font face="Arial"><a href="RegStartSession.htm">RegStartSession</a></font></td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top" colspan="3"><hr noshade>
+    </td>
+  </tr>
+  <tr>
+    <td width="20%" valign="top"><h3><font face="Arial">Example</font></h3>
+    </td>
+    <td colspan="2" valign="top"><pre>.include &quot;PSG:psg.def&quot;</pre>
+    <pre>.align
+record
+    regsess     ,i4</pre>
+    <pre>.proc
+
+    .
+    .
+    .
+
+    xcall RegEndSession(regsess)
+</pre>
+    </td>
+  </tr>
+</table>
+</body>
+</html>
